@@ -122,7 +122,6 @@ function packet(){return{type:"state",S:{q:S.q,turn:S.turn,scores:S.scores,bank:
 function send(){if(S.role==="host"&&S.conn?.open)S.conn.send(packet())}
 function apply(m){Object.assign(S,m.S);tvName0.textContent=m.names[0];tvName1.textContent=m.names[1];renderTV(m.question)}
 function renderTV(q){tvScore0.textContent=S.scores[0];tvScore1.textContent=S.scores[1];tvTurn.textContent="Giliran: "+(S.turn?tvName1.textContent:tvName0.textContent);tvTeam0.classList.toggle("active",S.turn===0);tvTeam1.classList.toggle("active",S.turn===1);if(!q){tvQuestion.textContent="Menunggu Host…";tvAnswers.innerHTML="";return}tvMeta.textContent=(q.cat||"UMUM")+" • KELAS "+(q.cls||"-")+" • "+(q.level||"");tvQuestion.textContent=q.q;tvBank.textContent=S.bank;tvTimer.textContent=S.timer||"";tvTimer.className="timer "+(S.timer>0&&S.timer<=3?"danger":"");tvAnswers.innerHTML=q.a.map((a,i)=>`<div class="ans ${S.used[i]?"revealed":"hidden"}"><div class="num">${i+1}</div><div class="txt">${esc(a[0])}</div><div class="points">${a[1]}</div></div>`).join("");[tvX0,tvX1,tvX2].forEach((e,i)=>e.classList.toggle("show",i<S.xs));tvNote.textContent=S.stealTeam!==null?"⚡ STEAL — GILIRAN "+(S.stealTeam?"TIM B":"TIM A"):"Dikendalikan oleh Host"}
-}
 function broadcast(){renderHost();send()}
 function nextQuestion(){S.q=(S.q+1)%data.length;S.turn=0;S.bank=0;S.xs=0;S.stealTeam=null;S.used=Array(data[S.q].a.length).fill(false);stopTimer(false);broadcast()}
 function reveal(i){if(S.q<0||S.used[i])return;S.used[i]=true;S.bank+=Number(data[S.q].a[i][1])||0;broadcast()}
